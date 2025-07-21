@@ -1,6 +1,4 @@
-import torch
 from abc import ABC, abstractmethod
-from typing import List, Dict, Tuple, Optional
 import random
 
 class BaseLanguageModel(ABC):
@@ -10,13 +8,13 @@ class BaseLanguageModel(ABC):
         self.itos = None
         self.is_trained = False
     
-    def load_data(self, filepath: str) -> List[str]:
+    def load_data(self, filepath: str) -> list[str]:
         """Load words from a text file (names.txt or names_complex.txt format)."""
         with open(filepath, 'r') as f:
             words = f.read().strip().split('\n')
         return [w.strip().lower() for w in words if w.strip()]
     
-    def build_vocabulary(self, words: List[str]):
+    def build_vocabulary(self, words: list[str]):
         """Build character vocabulary from words."""
         chars = sorted(list(set(''.join(words))))
         self.stoi = {s: i+1 for i, s in enumerate(chars)}
@@ -24,8 +22,8 @@ class BaseLanguageModel(ABC):
         self.itos = {i: s for s, i in self.stoi.items()}
         self.vocab_size = len(self.stoi)
     
-    def split_data(self, words: List[str], train_ratio: float = 0.8, val_ratio: float = 0.1, 
-                   test_ratio: float = 0.1, seed: int = 42) -> Tuple[List[str], List[str], List[str]]:
+    def split_data(self, words: list[str], train_ratio: float = 0.8, val_ratio: float = 0.1, 
+                   test_ratio: float = 0.1, seed: int = 42) -> tuple[list[str], list[str], list[str]]:
         """Split words into train/validation/test sets."""
         assert abs(train_ratio + val_ratio + test_ratio - 1.0) < 1e-6, "Ratios must sum to 1.0"
         
@@ -44,16 +42,16 @@ class BaseLanguageModel(ABC):
         return train_words, val_words, test_words
     
     @abstractmethod
-    def train(self, words: List[str]) -> None:
+    def train(self, words: list[str]) -> None:
         """Train the model on the given words."""
         pass
     
     @abstractmethod
-    def sample(self, num_samples: int = 1, seed: Optional[int] = None) -> List[str]:
+    def sample(self, num_samples: int = 1, seed: int | None = None) -> list[str]:
         """Generate samples from the trained model."""
         pass
     
     @abstractmethod
-    def evaluate(self, words: List[str]) -> Dict[str, float]:
+    def evaluate(self, words: list[str]) -> dict[str, float]:
         """Evaluate the model on the given words."""
         pass 

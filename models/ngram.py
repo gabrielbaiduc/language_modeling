@@ -1,6 +1,5 @@
 import torch
 from .base import BaseLanguageModel
-from typing import List, Dict, Optional
 
 class NGramModel(BaseLanguageModel):
     def __init__(self, N: int):
@@ -10,7 +9,7 @@ class NGramModel(BaseLanguageModel):
         self.N_counts = None
         self.P = None
 
-    def train(self, words: List[str]) -> None:
+    def train(self, words: list[str]) -> None:
         """Train the NGram model on the given words."""
         # Build vocabulary first
         self.build_vocabulary(words)
@@ -35,7 +34,7 @@ class NGramModel(BaseLanguageModel):
         
         self.is_trained = True
 
-    def sample(self, num_samples: int = 1, seed: Optional[int] = None) -> List[str]:
+    def sample(self, num_samples: int = 1, seed: int | None = None) -> list[str]:
         """Generate samples from the trained NGram model."""
         if not self.is_trained:
             raise RuntimeError("Model must be trained before sampling")
@@ -62,7 +61,7 @@ class NGramModel(BaseLanguageModel):
             results.append(''.join(out))
         return results
 
-    def evaluate(self, words: List[str]) -> Dict[str, float]:
+    def evaluate(self, words: list[str]) -> dict[str, float]:
         """Evaluate the negative log-likelihood of the model on the given words."""
         if not self.is_trained:
             raise RuntimeError("Model must be trained before evaluation")
